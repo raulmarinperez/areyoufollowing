@@ -1,9 +1,51 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Improv-recap, time to review what we've learned today</title>
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <p id="names_box">Name</p>
+    <div class="container">
+      <header class="top-bar">
+        <div class="text-container">
+          <p class="header-text">What did you find most impactful in this class&quest;</p>
+        </div>
+        <div class="progress-container">
+          <svg class="progress-ring" viewBox="0 0 100 100">
+            <!-- Add your circular progress bar SVG here -->
+            <circle class="progress-ring__ref_circle" stroke-width="5" fill="transparent" stroke="#A9A9A9" cx="50" cy="50" r="45" />
+            <circle class="progress-ring__circle" stroke-width="5" fill="transparent" cx="50" cy="50" r="45" />
+            <!-- Text element for the countdown -->
+            <text class="progress-ring__text" x="50" y="55" text-anchor="middle" font-size="16" fill="#333">0 s</text>
+          </svg>
+        </div>
+      </header>
+      
+      <main class="main-content">
+        <!-- Main content goes here -->
+        <p id="namesBox">Nobody yet!</p> 
+      </main>
+      
+      <footer class="bottom-bar">
+        <div class="controls">
+          <label for="timerInput">Set timer (seconds):</label>
+          <input type="number" id="timerInput" min="60" placeholder="Enter seconds">
+          <button id="startButton" disabled>Start Timer</button>
+          <!-- Custom file upload button -->
+          <label for="fileInput" id="participantsNumber">No participants yet</label>
+          <label class="file-upload-button" for="fileInput">
+            <input type="file" id="fileInput" accept=".json" />
+            Load Improv
+          </label>
+          <!-- New button to get outstanding participants -->
+          <button id="getParticipantsButton" disabled>Outstanding Participants</button>
+          <!-- Other controls -->
+        </div>
+      </footer>
+    </div>
+
     <script src="js/main.js"></script>
   </body>
 </html>
