@@ -1,9 +1,12 @@
 // Global variables
 //
 
+let message = "";
 let originalParticipants = [];
 let outstandingParticipants = [];
 let shift = 30; // time a name shows up (30 seconds by default)
+
+let timeRemaining = 0;
 
 let timerTimeout = 0;
 let istimerTimeoutRunning = false;
@@ -18,18 +21,22 @@ function processImprov(json, participantsLabel, headerText) {
   // Grab the relevant keys: participants, message and shift 
   if ('participants' in json) {
     originalParticipants = Array.from(json.participants);
-    participantsLabel.textContent = `There are ${originalParticipants.length} participants.`;
+    participantsLabel.textContent = `There are ${originalParticipants.length} participants`;
   }
   if ('message' in json)
-    headerText.textContent = json.message;
+    headerText.textContent = message = json.message;
   if ('shift' in json)
     shift = json.shift;
+}
+
+function enableOutstandingButton(outstandingButton) {
+  outstandingButton.disabled = false; 
 }
 
 // Buttons initialization functions
 //
 
-function initialize_startButton(startButton, fileInputButton, durationInput, progressRing, progressText) {
+function initialize_startButton(startButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel) {
   // duration setup callback function - check conditions to enable/disable the start button
   durationInput.addEventListener('input', function() {
     enableStartButton(startButton, durationInput.value, originalParticipants);
@@ -44,10 +51,35 @@ function initialize_startButton(startButton, fileInputButton, durationInput, pro
       stopNameInterval();
     } 
     else {
-      starttimerTimeout(startButton, fileInputButton, progressRing, progressText, duration);
+      starttimerTimeout(startButton, fileInputButton, progressRing, progressText, duration, namesLabel);
       startNameInterval();
       pickUpParticipant(); // pick up the first one now!
+      enableOutstandingButton(outstandingButton);
     }
+  });
+}
+
+function initialize_outstandingButton(outstandingButton) {
+  // click callback function
+  outstandingButton.addEventListener("click", function () {
+    const outstandingExport = {
+      "message": message,
+      "shift": shift,
+      "participants": outstandingParticipants
+    }
+
+    // Convert JSON object to string and then a Blob to download
+    const jsonString = JSON.stringify(outstandingExport, null, 2); // Pretty-print with 2 spaces
+    const blob = new Blob([jsonString], { type: "application/json" });
+
+    // Create a link element which will force the download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "outstanding-elements.json";
+    link.click();
+
+    // Clean up by revoking the Blob URL
+    URL.revokeObjectURL(link.href);
   });
 }
 
@@ -93,9 +125,9 @@ function enableStartButton(startButton, duration, participants) {
   startButton.disabled =  isNaN(duration) || duration <= 0 || participants.length == 0;
 }
 
-function updateCountdown(fileInputButton, progressRing, progressText, duration) {
+function updateCountdown(fileInputButton, progressRing, progressText, duration, namesLabel) {
     // Timer related variables
-    let timeRemaining = duration;
+    timeRemaining = duration;
     let progress =  0;
     let step = 1/duration;
     // Progress ring related variables
@@ -116,6 +148,7 @@ function updateCountdown(fileInputButton, progressRing, progressText, duration) 
             fileInputButton.classList.remove('disabled');
             progressRing.style.stroke = "#B22222";
             stopNameInterval();
+            namesLabel.textContent = "That was all! Well done!";
         }
 
         timeRemaining--;
@@ -151,12 +184,12 @@ function stopNameInterval() {
   isNameIntervalRunning = false;
 }
 
-function starttimerTimeout(startButton, fileInputButton, progressRing, progressText, duration) {
+function starttimerTimeout(startButton, fileInputButton, progressRing, progressText, duration, namesLabel) {
   if (isNaN(duration) || duration <= 0) {
     alert("Please enter a valid number greater than 0.");
     return;
   }
-  updateCountdown(fileInputButton, progressRing, progressText, duration);
+  updateCountdown(fileInputButton, progressRing, progressText, duration, namesLabel);
   istimerTimeoutRunning = true;
   startButton.textContent = "Stop Timer";
   startButton.classList.add("stop");
@@ -171,13 +204,13 @@ function startNameInterval() {
 function pickUpParticipant() {
   const namesLabel = document.getElementById("namesBox");
 
-  if (outstandingParticipants.length > 0) {
+  if (outstandingParticipants.length > 0 && timeRemaining>=shift ) {
     // Short list before pick an element up from the end (pop)
     outstandingParticipants.sort(() => Math.random() - 0.5);
     // Get the element where names show up & replace content
     namesLabel.textContent = outstandingParticipants.pop();
   }
-  else
+  else if (outstandingParticipants.length == 0)
     namesLabel.textContent = "We're done!";
 }
 
@@ -188,15 +221,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Reference to the GUI elements
   const durationInput = document.getElementById("timerInput");
   const startButton = document.getElementById("startButton");
+  const outstandingButton = document.getElementById("getParticipantsButton");
   const progressRing = document.querySelector(".progress-ring__circle");
   const progressText = document.querySelector(".progress-ring__text");
   const fileInput = document.getElementById("fileInput");
   const fileInputButton = document.querySelector(".file-upload-button");
   const participantsLabel = document.getElementById("participantsNumber");
   const headerText = document.querySelector(".header-text");
+  const namesLabel = document.getElementById("namesBox");
   
   // Buttons initialization
-  initialize_startButton(startButton, fileInputButton, durationInput, progressRing, progressText);
+  initialize_startButton(startButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel);
+  initialize_outstandingButton(outstandingButton);
   initialize_fileInputButton(fileInput, startButton, durationInput, participantsLabel, headerText);
   initialize_progressText(progressText, durationInput);  
 });

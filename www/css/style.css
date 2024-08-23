@@ -29,7 +29,8 @@ html, body {
 }
 
 .header-text {
-    font-size: 1.5rem;
+    font-size: 3rem;
+    font-weight: bold;
     margin: 0;
     text-align: center;
 }
@@ -47,7 +48,6 @@ html, body {
 }
 
 .progress-ring__circle {
-    /*transition: stroke-dashoffset 0.35s;*/
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
 }
@@ -56,28 +56,84 @@ html, body {
 /* --                  */
 
 .main-content {
-    flex-grow: 1; /* Main content takes up remaining space */
-    background-color: #ffffff; /* White background for main content */
-    padding: 20px;
-    overflow-y: auto; /* Scroll if content overflows */
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+#namesBox {
+    font-size: 20vmin; /* Makes the text size responsive and take up around 20% of the viewport */
+    font-weight: bold;
+    text-align: center;
+    white-space: normal; /* Prevents text from wrapping to a new line */
+    transform-origin: center center;
+    animation: zoom 3s infinite, move 3s infinite, rotate 3s infinite;
+}
+
+@keyframes zoom { /* Zoom in and out */
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes move { /* Slight random movement */
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(10px, -10px);
+    }
+    50% {
+        transform: translate(-10px, 10px);
+    }
+    75% {
+        transform: translate(5px, -5px);
+    }
+}
+
+@keyframes rotate { /* Rotation effect */
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(3deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 /* bottom-bar styles */
 /* --                */
 
 .bottom-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-basis: 15%; /* Start with 25% height for top and bottom bars */
     flex-shrink: 0; /* Ensure the bars don't shrink below their basis height */
     flex-grow: 0; /* Prevent the bars from growing */
     background-color: #f8f9fa; /* Light gray background for top and bottom bars */
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .controls {
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+#timer-components, #loadimprov-components, #outstanding-components {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 #timerInput {
