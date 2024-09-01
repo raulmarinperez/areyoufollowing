@@ -1,0 +1,13 @@
+# server.document-root = "<path to where the repo was cloned>/improv-recap/www" 
+
+server.port = 9090
+
+# If running lighttpd earlier than lighttpd 1.4.71, uncomment (remove '#') to add the following:
+mimetype.assign = (
+  ".htm" => "text/html", 
+  ".js" => "text/javascript",
+  ".txt" => "text/plain",
+  ".css" => "text/css",
+  ".jpg" => "image/jpeg",
+  ".png" => "image/png" 
+)
