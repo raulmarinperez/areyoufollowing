@@ -2,6 +2,7 @@
 //
 
 let message = "";
+let currentParticipant = "";
 let originalParticipants = [];
 let outstandingParticipants = [];
 let shift = 30; // time a name shows up (30 seconds by default)
@@ -29,6 +30,14 @@ function processImprov(json, participantsLabel, headerText) {
     shift = json.shift;
 }
 
+function enableSkipButton(skipButton) {
+  skipButton.disabled = false; 
+}
+
+function disableSkipButton(skipButton) {
+  skipButton.disabled = true; 
+}
+
 function enableOutstandingButton(outstandingButton) {
   outstandingButton.disabled = false; 
 }
@@ -36,25 +45,40 @@ function enableOutstandingButton(outstandingButton) {
 // Buttons initialization functions
 //
 
-function initialize_startButton(startButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel) {
+function initialize_startButton(startButton, skipButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel) {
   // duration setup callback function - check conditions to enable/disable the start button
   durationInput.addEventListener('input', function() {
     enableStartButton(startButton, durationInput.value, originalParticipants);
   });
 
-  // click callback function
+  // start button's click callback function
   startButton.addEventListener("click", function () {
     let duration = parseInt(durationInput.value, 10);
 
     if (istimerTimeoutRunning) {
+      disableSkipButton(skipButton);
       stoptimerTimeout(startButton, fileInputButton);
       stopNameInterval();
+      outstandingParticipants.push(currentParticipant) // reintroduce current participant for future plays
     } 
     else {
       starttimerTimeout(startButton, fileInputButton, progressRing, progressText, duration, namesLabel);
       startNameInterval();
       pickUpParticipant(); // pick up the first one now!
+      enableSkipButton(skipButton);
       enableOutstandingButton(outstandingButton);
+    }
+  });
+
+  // skip button's click callback function
+  skipButton.addEventListener("click", function () {
+    let duration = parseInt(durationInput.value, 10);
+
+    if (istimerTimeoutRunning) {
+      stopNameInterval();
+      outstandingParticipants.push(currentParticipant) // reintroduce current participant for future plays
+      nameInterval = setInterval(pickUpParticipant, shift*1000);
+      pickUpParticipant(); // pick up the first one now!
     }
   });
 }
@@ -204,11 +228,11 @@ function startNameInterval() {
 function pickUpParticipant() {
   const namesLabel = document.getElementById("namesBox");
 
-  if (outstandingParticipants.length > 0 && timeRemaining>=shift ) {
+  if (outstandingParticipants.length > 0) {
     // Short list before pick an element up from the end (pop)
     outstandingParticipants.sort(() => Math.random() - 0.5);
-    // Get the element where names show up & replace content
-    namesLabel.textContent = outstandingParticipants.pop();
+    // Get the element where names show up & replace content with current participant
+    namesLabel.textContent = currentParticipant = outstandingParticipants.pop();
   }
   else if (outstandingParticipants.length == 0)
     namesLabel.textContent = "We're done!";
@@ -221,6 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Reference to the GUI elements
   const durationInput = document.getElementById("timerInput");
   const startButton = document.getElementById("startButton");
+  const skipButton = document.getElementById("skipButton");
   const outstandingButton = document.getElementById("getParticipantsButton");
   const progressRing = document.querySelector(".progress-ring__circle");
   const progressText = document.querySelector(".progress-ring__text");
@@ -231,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const namesLabel = document.getElementById("namesBox");
   
   // Buttons initialization
-  initialize_startButton(startButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel);
+  initialize_startButton(startButton, skipButton, outstandingButton, fileInputButton, durationInput, progressRing, progressText, namesLabel);
   initialize_outstandingButton(outstandingButton);
   initialize_fileInputButton(fileInput, startButton, durationInput, participantsLabel, headerText);
   initialize_progressText(progressText, durationInput);  

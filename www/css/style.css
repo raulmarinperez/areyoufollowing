@@ -144,7 +144,7 @@ html, body {
     text-align: center;
 }
 
-#startButton, #getParticipantsButton {
+#startButton, #skipButton, #getParticipantsButton {
   padding: 10px 20px;
   font-size: 16px;
   color: white;
@@ -168,6 +168,14 @@ html, body {
 
 #startButton.stop:hover {
   background-color: #c82333;
+}
+
+#skipButton {
+  background-color: #f39c12;
+}
+  
+#skipButton:hover {
+  background-color: #e67e22;
 }
 
 .file-upload-button {
@@ -212,7 +220,7 @@ html, body {
     background-color: #e67e22; /* Darker shade of orange */
 }
 
-#getParticipantsButton:disabled,#startButton:disabled {
+#getParticipantsButton:disabled,#startButton:disabled,#skipButton:disabled {
     background-color: #e0e0e0; /* Light gray for disabled state */
     color: #b0b0b0; /* Darker gray text */
     cursor: not-allowed; /* Show a "not allowed" cursor */
