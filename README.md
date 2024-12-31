@@ -29,7 +29,7 @@ You can customize the behavior of the application by uploading a JSON file with 
 
 ### Building configuration files with LLMs
 
-Any LLM can help you build this configuration file easily. Let's suppose the following list of names coming from a CSV file:
+Any LLM can help you build this configuration file easily. Let's suppose you have the following list of names from a CSV file:
 
 Billie Eilish
 Beyoncé
@@ -52,10 +52,10 @@ Scarlett Johansson
 George Clooney
 Kylie Jenner
 
-The following prompt should create the needed configuration file (or something close to it):
+The following prompt should generate the required configuration file (or something close to it):
 
 ```text
-Can you please create a JSON configuration file called areyoufollowing.json similar to the sample one below based on the list of names shared as well and with a shift of 52 seconds?
+Can you please create a JSON configuration file named areyoufollowing.json based on the sample below, using the shared list of names and setting a shift of 52 seconds?
 
 {
   "message": "What did you find most impactful today?",
@@ -101,7 +101,6 @@ Kylie Jenner
   ![alt text](running.png)
 
 ### Dealing with outstanding participants
-
 
 If you want to use `areyoufollowing` in your courses, you might benefit from the following two additional features:
 
