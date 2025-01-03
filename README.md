@@ -31,26 +31,26 @@ You can customize the behavior of the application by uploading a JSON file with 
 
 Any LLM can help you build this configuration file easily. Let's suppose you have the following list of names from a CSV file:
 
-Billie Eilish
-Beyoncé
-Cristiano Ronaldo
-Ariana Grande
-Shakira
-Jennifer Lopez
-Tom Cruise
-Dwayne Johnson
-Brad Pitt
-Justin Bieber
-Angelina Jolie
-Selena Gomez
-Keanu Reeves
-Will Smith
-Eminem
-Zendaya
-Drake
-Scarlett Johansson
-George Clooney
-Kylie Jenner
+Billie Eilish<br/>
+Beyoncé<br/>
+Cristiano Ronaldo<br/>
+Ariana Grande<br/>
+Shakira<br/>
+Jennifer Lopez<br/>
+Tom Cruise<br/>
+Dwayne Johnson<br/>
+Brad Pitt<br/>
+Justin Bieber<br/>
+Angelina Jolie<br/>
+Selena Gomez<br/>
+Keanu Reeves<br/>
+Will Smith<br/>
+Eminem<br/>
+Zendaya<br/>
+Drake<br/>
+Scarlett Johansson<br/>
+George Clooney<br/>
+Kylie Jenner<br/>
 
 The following prompt should generate the required configuration file (or something close to it):
 
